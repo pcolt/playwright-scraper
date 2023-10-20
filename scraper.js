@@ -2,6 +2,8 @@ import { chromium } from 'playwright';
 import { parse } from 'json2csv'
 import { writeFileSync } from 'fs';
 
+const baseUrl = 'https://github.com';
+
 const browser = await chromium.launch({
     headless: false
 });
@@ -10,7 +12,7 @@ const page = await browser.newPage({
     bypassCSP: true,
 });
 
-await page.goto('https://github.com/topics/crawling');
+await page.goto(`${baseUrl}/topics/crawling`);
 await page.click('text=Load more');
 await page.waitForFunction(() => {
     const repoCards = document.querySelectorAll('article.border');
@@ -23,7 +25,7 @@ const locatorRepos = page.locator('article.border');
 const repos = await locatorRepos.evaluateAll((repoCards) => {
 // const repos = await page.$$eval('article.border', (repoCards) => {
     return repoCards.map(card => {
-        const [user, repo] = card.querySelectorAll('h3 a');
+        const [user, repo] = card.querySelectorAll('h3 a');     // assign first and second result using js destructuring assigment sintax
         const stars = card.querySelector('#repo-stars-counter-star')
             .getAttribute('title');
         const description = card.querySelector('div.px-3 > p');
@@ -31,6 +33,8 @@ const repos = await locatorRepos.evaluateAll((repoCards) => {
 
         const toText = (element) => element && element.innerText.trim();
         const parseNumber = (text) => Number(text.replace(/,/g, ''));
+        const repoLink = card.querySelector('div.px-3 a.Link').getAttribute('href');
+        console.log('repoLink', repoLink);
 
         return {
             user: toText(user),
@@ -39,9 +43,19 @@ const repos = await locatorRepos.evaluateAll((repoCards) => {
             stars: parseNumber(stars),
             description: toText(description),
             topics: Array.from(topics).map((t) => toText(t)),
+            repoLink: repoLink,
         };
     });
 });
+
+
+// await page.goto(`${baseUrl}${repoLink}`);
+// const commitText = await page
+//     .getByRole('listitem')
+//     .filter({ hasText: 'commits'})
+//     .textContent()
+// const numberStrings = commitText.match(/\d+/g);
+// const commitCount = Number(numberStrings.join(''));
 
 
 // Print the results 🚀
