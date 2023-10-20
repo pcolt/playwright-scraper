@@ -19,7 +19,9 @@ await page.waitForFunction(() => {
 
 // Extract data from the page. Selecting all 'article' elements
 // will return all the repository cards we're looking for.
-const repos = await page.$$eval('article.border', (repoCards) => {
+const locatorRepos = page.locator('article.border');
+const repos = await locatorRepos.evaluateAll((repoCards) => {
+// const repos = await page.$$eval('article.border', (repoCards) => {
     return repoCards.map(card => {
         const [user, repo] = card.querySelectorAll('h3 a');
         const stars = card.querySelector('#repo-stars-counter-star')

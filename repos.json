@@ -20,7 +20,7 @@
         "user": "gocolly",
         "repo": "colly",
         "url": "https://github.com/gocolly/colly",
-        "stars": 20921,
+        "stars": 20920,
         "description": "Elegant Scraper and Crawler Framework for Golang",
         "topics": [
             "go",
@@ -245,7 +245,7 @@
         "user": "transitive-bullshit",
         "repo": "awesome-puppeteer",
         "url": "https://github.com/transitive-bullshit/awesome-puppeteer",
-        "stars": 2220,
+        "stars": 2219,
         "description": "A curated list of awesome puppeteer resources.",
         "topics": [
             "automation",
