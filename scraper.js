@@ -16,7 +16,7 @@ await page.goto(`${baseUrl}/topics/crawling`);
 await page.click('text=Load more');
 await page.waitForFunction(() => {
     const repoCards = document.querySelectorAll('article.border');
-    return repoCards.length > 20;
+    return repoCards.length > 5;
 });
 
 // Extract data from the page. Selecting all 'article' elements
@@ -33,7 +33,7 @@ const repos = await locatorRepos.evaluateAll((repoCards) => {
 
         const toText = (element) => element && element.innerText.trim();
         const parseNumber = (text) => Number(text.replace(/,/g, ''));
-        const repoLink = card.querySelector('div.px-3 a.Link').getAttribute('href');
+        const repoLink = card.querySelectorAll('div.px-3 a.Link')[1].getAttribute('href');
         console.log('repoLink', repoLink);
 
         return {
@@ -48,25 +48,41 @@ const repos = await locatorRepos.evaluateAll((repoCards) => {
     });
 });
 
+// Now extract data (commits number) from each repo page
+for (const repo of repos) {
+    await page.goto(`${baseUrl}${repo.repoLink}`);
 
-// await page.goto(`${baseUrl}${repoLink}`);
-// const commitText = await page
-//     .getByRole('listitem')
-//     .filter({ hasText: 'commits'})
-//     .textContent()
-// const numberStrings = commitText.match(/\d+/g);
-// const commitCount = Number(numberStrings.join(''));
+    console.log(`crawling page ${baseUrl}${repo.repoLink}`);
+
+    // find the commits element and extract the value
+    const commitText = await page
+        .locator('span.d-none.d-sm-inline > strong')
+        .textContent();
+    console.log('commitText', commitText);
+    const numberStrings = commitText.match(/\d+/g);
+    const commitCount = Number(numberStrings.join(''));
+    console.log('commitCount', commitCount);
+
+    // select the right repos object and store the commits number
+    repos.map(mappedRepos => {
+        if (mappedRepos.url === repo.url) {
+            repo.commits = commitCount;
+            console.log('repo', repo);
+            return repo;
+        }
+    })
+}
 
 
 // Print the results 🚀
 console.log(`We extracted ${repos.length} repositories.`);
 console.dir(repos);
 
+// Store the results in the filesystem
 const csv = parse(repos);
 writeFileSync('repos.csv', csv);
 writeFileSync('repos.json', JSON.stringify(repos));
 
 
-
-await page.waitForTimeout(10000);
+// await page.waitForTimeout(10000);   // change this to somthing more robust like
 await browser.close();
