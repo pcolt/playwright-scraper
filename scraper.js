@@ -1,7 +1,14 @@
 import { chromium } from 'playwright';
 import { parse } from 'json2csv'
 import { writeFileSync } from 'fs';
+import { mongoose } from 'mongoose';
+import 'dotenv/config';
 
+
+/**
+ * FIRST PART - SCRAPING WITH PLAYWRIGHT
+ * This part is based on Apify tutorial at https://blog.apify.com/how-to-scrape-the-web-with-playwright-ece1ced75f73/
+ */
 const baseUrl = 'https://github.com';
 
 const browser = await chromium.launch({
@@ -12,8 +19,8 @@ const page = await browser.newPage({
     bypassCSP: true,
 });
 
-await page.goto(`${baseUrl}/topics/crawling`);
-await page.click('text=Load more');
+await page.goto(`${baseUrl}/topics/climatechange`);
+// await page.click('text=Load more');
 await page.waitForFunction(() => {
     const repoCards = document.querySelectorAll('article.border');
     return repoCards.length > 5;
@@ -86,3 +93,43 @@ writeFileSync('repos.json', JSON.stringify(repos));
 
 // await page.waitForTimeout(10000);   // change this to somthing more robust like
 await browser.close();
+
+
+
+/**
+ * SECOND PART - SAVE RESULTS TO ATLAS' MONGO DB
+ * This part is based on Open Full Stack - part3 c: Saving data to MongoDB at https://fullstackopen.com/en/part3/saving_data_to_mongo_db#mongo-db
+ */
+
+const url = process.env.URL;            // use dotenv's .env environment file
+//   `mongodb+srv://fullstack:${password}@cluster0.ck2n2.mongodb.net/repos?retryWrites=true&w=majority`
+
+mongoose.set('strictQuery',false)
+mongoose.connect(url)
+
+const repoSchema = new mongoose.Schema({
+  user: String,
+  repo: String,
+  url: String,
+  stars: Number,
+  description: String,
+  topics: [],
+  repoLink: String,
+  commits: Number
+})
+
+const RepoMongooseModel = mongoose.model('Repo', repoSchema)
+
+await RepoMongooseModel.deleteMany().then(function(){
+    console.log("Data deleted");
+}).catch(function(error){
+    console.log(error);
+});
+
+await RepoMongooseModel.insertMany(repos).then(function(){
+    console.log("Data inserted");
+}).catch(function(error){
+    console.log(error);
+});
+
+mongoose.connection.close();

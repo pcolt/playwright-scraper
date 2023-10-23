@@ -3,3 +3,6 @@
 .~lock.repos.csv#
 repos.csv
 repos.json
+
+# dotenv's environment file
+.env
