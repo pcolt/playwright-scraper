@@ -31,7 +31,7 @@ await page.waitForFunction(() => {
 const locatorRepos = page.locator('article.border');
 const repos = await locatorRepos.evaluateAll((repoCards) => {
 // const repos = await page.$$eval('article.border', (repoCards) => {
-    return repoCards.map(card => {
+    return repoCards.map((card, index) => {
         const [user, repo] = card.querySelectorAll('h3 a');     // assign first and second result using js destructuring assigment sintax
         const stars = card.querySelector('#repo-stars-counter-star')
             .getAttribute('title');
@@ -44,6 +44,7 @@ const repos = await locatorRepos.evaluateAll((repoCards) => {
         console.log('repoLink', repoLink);
 
         return {
+            id: index,
             user: toText(user),
             repo: toText(repo),
             url: repo.href,
