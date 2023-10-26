@@ -109,14 +109,15 @@ mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
 const repoSchema = new mongoose.Schema({
-  user: String,
-  repo: String,
-  url: String,
-  stars: Number,
-  description: String,
-  topics: [],
-  repoLink: String,
-  commits: Number
+    id: Number,
+    user: String,
+    repo: String,
+    url: String,
+    stars: Number,
+    description: String,
+    topics: [],
+    repoLink: String,
+    commits: Number
 })
 
 const RepoMongooseModel = mongoose.model('Repo', repoSchema)
