@@ -46,7 +46,7 @@ const repos = await locatorRepos.evaluateAll((repoCards) => {
         return {
             id: index,
             user: toText(user),
-            repo: toText(repo),
+            repoName: toText(repo),
             url: repo.href,
             stars: parseNumber(stars),
             description: toText(description),
@@ -111,7 +111,7 @@ mongoose.connect(url)
 const repoSchema = new mongoose.Schema({
     id: Number,
     user: String,
-    repo: String,
+    repoName: String,
     url: String,
     stars: Number,
     description: String,
