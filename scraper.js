@@ -10,16 +10,18 @@ import 'dotenv/config';
  * This part is based on Apify tutorial at https://blog.apify.com/how-to-scrape-the-web-with-playwright-ece1ced75f73/
  */
 const baseUrl = 'https://github.com';
+// const topic = 'crawler'
+const topic = 'climatechange'
 
 const browser = await chromium.launch({
-    headless: false
+    headless: true
 });
 
 const page = await browser.newPage({
     bypassCSP: true,
 });
 
-await page.goto(`${baseUrl}/topics/climatechange`);
+await page.goto(`${baseUrl}/topics/${topic}`);
 // await page.click('text=Load more');
 await page.waitForFunction(() => {
     const repoCards = document.querySelectorAll('article.border');
@@ -120,7 +122,7 @@ const repoSchema = new mongoose.Schema({
     commits: Number
 })
 
-const RepoMongooseModel = mongoose.model('Repo', repoSchema)
+const RepoMongooseModel = mongoose.model(topic, repoSchema)
 
 await RepoMongooseModel.deleteMany().then(function(){
     console.log("Data deleted");
