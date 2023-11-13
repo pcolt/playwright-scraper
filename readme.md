@@ -11,11 +11,19 @@ The scraping process returns for each repository found the following data:
 - description
 - list of repository topics
 
-Following steps will be to migrate this funcitonality into a single-page app using Nodejs and React.
-
 ## Usage
 
 `npm run start` or `node index.js` to start the microservice listening to new Redis messages.
+
+## Installation
+
+Run `npm install`
+
+In the root folder create `.env` file with following keys:   
+```
+MONGO_URL = 'mongodb+srv://fullstack:MONGODB_FULLSTACK_USER_PASSWORD@cluster0.ck2n2.mongodb.net/repos?retryWrites=true&w=majority'
+REDIS_URL = 'redis://default:MONGODB_DEFAULTUSER_PASSWORD@redis-12236.c300.eu-central-1-1.ec2.cloud.redislabs.com:12236'
+```
 
 ## References
 
