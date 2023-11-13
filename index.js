@@ -10,9 +10,10 @@ import scraper from './scraper.js'  // scraper function
     // password: 'Pi-cian1986'
   })
     .on('error', (err) => {
-      logger.error("Error " + err);
+      console.error("Error " + err);
     })
 
+  // Create a subscriber and subscribe to the 'runScraper' channel
   const subscriber = redisClient.duplicate()
   await subscriber.connect()
   console.log('subscriber.isReady():', subscriber.isReady)
@@ -21,8 +22,10 @@ import scraper from './scraper.js'  // scraper function
   await subscriber.subscribe('runScraper', (message) => {
 
     console.log(message) // 'message'
+
+    const topic = JSON.parse(message).topic
     
-    scraper()
+    scraper(topic)
     
   });
 })()

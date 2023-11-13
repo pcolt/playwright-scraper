@@ -1,17 +1,19 @@
 import { chromium } from 'playwright';
 import { parse } from 'json2csv'
 import { writeFileSync } from 'fs';
-import { mongoose } from 'mongoose';
-import 'dotenv/config';
+import mongoose from './utils/mongoose.js';
+// import 'dotenv/config';
 import repoSchema from './models/repo_model.js';
 
-const scraper = async () => {
+const scraper = async (topic) => {
+    // console.log('topic', topic);
+
     /**
      * FIRST PART - SCRAPING WITH PLAYWRIGHT
      * This part is based on Apify tutorial at https://blog.apify.com/how-to-scrape-the-web-with-playwright-ece1ced75f73/
      */
     const baseUrl = 'https://github.com';
-    const topic = 'crawler'
+    // const topic = 'crawler'
     // const topic = 'climatechange'
 
     const browser = await chromium.launch({
@@ -104,25 +106,6 @@ const scraper = async () => {
      * SECOND PART - SAVE RESULTS TO ATLAS' MONGO DB
      * This part is based on Open Full Stack - part3 c: Saving data to MongoDB at https://fullstackopen.com/en/part3/saving_data_to_mongo_db#mongo-db
      */
-
-    const url = process.env.URL;            // use dotenv's .env environment file
-    //   `mongodb+srv://fullstack:${password}@cluster0.ck2n2.mongodb.net/repos?retryWrites=true&w=majority`
-
-    mongoose.set('strictQuery',false)
-    mongoose.connect(url)
-
-    // const repoSchema = new mongoose.Schema({
-    //     id: Number,
-    //     user: String,
-    //     repoName: String,
-    //     url: String,
-    //     stars: Number,
-    //     description: String,
-    //     topics: [],
-    //     repoLink: String,
-    //     commits: Number
-    // })
-
     const RepoMongooseModel = mongoose.model(topic, repoSchema)
 
     await RepoMongooseModel.deleteMany().then(function(){

@@ -1,0 +1,11 @@
+import { mongoose } from 'mongoose';
+import 'dotenv/config';
+
+// Connect to MongoDB
+const url = process.env.URL;            // use dotenv's .env environment file
+//   `mongodb+srv://fullstack:${password}@cluster0.ck2n2.mongodb.net/repos?retryWrites=true&w=majority`
+
+mongoose.set('strictQuery',false);
+mongoose.connect(url);
+
+export default mongoose;
