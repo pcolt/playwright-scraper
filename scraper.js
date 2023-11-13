@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 import { parse } from 'json2csv'
 import { writeFileSync } from 'fs';
-import mongoose from './utils/mongoose.js';
+import mongoose from 'mongoose';
 // import 'dotenv/config';
 import repoSchema from './models/repo_model.js';
 
