@@ -1,5 +1,5 @@
 import { chromium } from 'playwright';
-import { parse } from 'json2csv'
+import { Parser } from '@json2csv/plainjs';
 import { writeFileSync } from 'fs';
 import mongoose from 'mongoose';
 // import 'dotenv/config';
@@ -92,9 +92,14 @@ const scraper = async (topic) => {
     console.dir(repos);
 
     // Store the results in the filesystem
-    const csv = parse(repos);
-    writeFileSync('repos.csv', csv);
-    writeFileSync('repos.json', JSON.stringify(repos));
+    try {
+        const parser = new Parser();
+        const csv = parser.parse(repos);
+        writeFileSync('repos.csv', csv);
+        writeFileSync('repos.json', JSON.stringify(repos));
+    } catch (err) {
+        console.error('json2csv error:', err);
+    }
 
 
     // await page.waitForTimeout(10000);   // change this to somthing more robust like

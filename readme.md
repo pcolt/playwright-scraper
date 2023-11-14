@@ -47,8 +47,19 @@ Once you are connected, check open and running pub.sub channels with:
 
 ### Docker 
 
+Build Docker image
+`docker build . -t scraper`
+
+Run Docker image
+`docker run --env URL='URL_.ENV_FILE' --env REDIS_URL='REDIS_URL_.ENV_FILE' scraper`
+
 Docker best practices:
 ![Docker best practices](./documentation/NodeJS-CheatSheet_page-0001.jpg)[Open it in a new tab](https://res.cloudinary.com/snyk/images/v1/wordpress-sync/NodeJS-CheatSheet/NodeJS-CheatSheet.pdf).
+
+### Fly
+
+Check secrets:
+`fly secrets list`
 
 ## References
 
