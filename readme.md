@@ -19,11 +19,16 @@ The scraping process returns for each repository found the following data:
 
 Run `npm install`
 
-In the root folder create `.env` file with following keys:   
+##### Configure secret/environment variables
+
+- In the root folder create `.env` file with following keys:   
 ```
 MONGO_URL = 'mongodb+srv://fullstack:MONGODB_FULLSTACK_USER_PASSWORD@cluster0.ck2n2.mongodb.net/repos?retryWrites=true&w=majority'
 REDIS_URL = 'redis://default:REDIS_DEFAULTUSER_PASSWORD@redis-12236.c300.eu-central-1-1.ec2.cloud.redislabs.com:12236'
-```
+```  
+- Set sensitive data as Fly.io secrets with commands:   
+`fly secrets set MONGO_URL='mongodb+srv://fullstack:MONGODB_FULLSTACK_USER_PASSWORD@cluster0.ck2n2.mongodb.net/repos?retryWrites=true&w=majority'`
+`fly secrets set REDIS_URL='redis://default:MONGODB_DEFAULTUSER_PASSWORD@redis-12236.c300.eu-central-1-1.ec2.cloud.redislabs.com:12236'`
 
 ## Dependencies
 
@@ -60,6 +65,9 @@ Docker best practices:
 
 Check secrets:
 `fly secrets list`
+
+Deploy to Fly
+`fly deploy`
 
 ## References
 
