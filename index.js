@@ -28,7 +28,7 @@ await subscriber.connect()
 console.log('subscriber.isReady():', subscriber.isReady)
 console.log('subscriber.isOpen():', subscriber.isOpen)
 
-await subscriber.subscribe('runScraper', (message) => {
+await subscriber.subscribe(`runScraper_${process.env.NODE_ENV}`, (message) => {
 
   console.log(message) // 'message'
 

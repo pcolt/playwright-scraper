@@ -32,19 +32,22 @@ Check secrets:
 `fly secrets list`
 
 Deploy to Fly
-`fly deploy`
+`fly deploy` or `npm run deploy`
 
-Scale Fly app to zero machines (stopped)
-`fly scale count 0 -a github-playright`
+Scale Fly app to 0 machines (stopped)
+`fly scale count 0`
 
 Scale Fly app back to 1 machine
-`fly scale count 1 -a github-playright`
+`fly scale count 1`
 
 Show list of Fly apps currently deployed:
 `fly apps list`
 
 Show logs from all machines (or filter by id with -i flag)
 `fly logs`
+
+Restart machine
+`fly machine restart`
 
 ## Installation
 

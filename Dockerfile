@@ -3,6 +3,8 @@ FROM node:20.3.1-slim
 FROM mcr.microsoft.com/playwright:focal
 # playwright verbose logging
 ENV DEBUG=pw:api
+# Set production environment
+ENV NODE_ENV="production"
 
 # Install dumb-init to gracefully handle stopping the container
 RUN apt update && apt install dumb-init
