@@ -1,6 +1,8 @@
 FROM node:20.3.1-slim
 
 FROM mcr.microsoft.com/playwright:focal
+# playwright verbose logging
+ENV DEBUG=pw:api
 
 # Install dumb-init to gracefully handle stopping the container
 RUN apt update && apt install dumb-init

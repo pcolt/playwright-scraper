@@ -63,7 +63,8 @@ const scraper = async (topic) => {
 
     // Now extract data (commits number) from each repo page
     for (const repo of repos) {
-        await page.goto(`${baseUrl}${repo.repoLink}`);
+        // Go to the page and wait 2 minute to load
+        await page.goto(`${baseUrl}${repo.repoLink}`, { timeout: 2*60*1000 });
 
         console.log(`crawling page ${baseUrl}${repo.repoLink}`);
 
