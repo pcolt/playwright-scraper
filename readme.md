@@ -13,7 +13,7 @@ The scraping process returns for each repository found the following data:
 
 ## Usage
 
-`npm run start` or `node index.js` to start the microservice listening to new Redis messages.
+`npm start` or `node index.js` to start the microservice listening to new Redis messages.
 
 ##### Docker 
 
