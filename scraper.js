@@ -64,13 +64,18 @@ const scraper = async (topic) => {
     // Now extract data (commits number) from each repo page
     for (const repo of repos) {
         // Go to the page and wait 2 minute to load
-        await page.goto(`${baseUrl}${repo.repoLink}`, { timeout: 2*60*1000 });
+        await page.goto(`${baseUrl}${repo.repoLink}`, { timeout: 2*60*10000 });
 
         console.log(`crawling page ${baseUrl}${repo.repoLink}`);
 
         // find the commits element and extract the value
+        // const commitText = "test";
         const commitText = await page
-            .locator('span.d-none.d-sm-inline > strong')
+            // .locator('span.d-none.d-sm-inline > strong')
+            .getByText('commits')
+            // .locator('span')
+            // .filter({hasText: 'commits'})
+            .first()
             .textContent();
         console.log('commitText', commitText);
         const numberStrings = commitText.match(/\d+/g);
