@@ -1,6 +1,6 @@
 FROM node:20.3.1-slim
 
-FROM mcr.microsoft.com/playwright:focal
+FROM mcr.microsoft.com/playwright:v1.39.0-focal
 # playwright verbose logging
 ENV DEBUG=pw:api
 # Set production environment

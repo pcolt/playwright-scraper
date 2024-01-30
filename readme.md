@@ -21,7 +21,11 @@ Build Docker image
 `docker build . -t scraper`
 
 Run Docker image
-`docker run --env URL='URL_.ENV_FILE' --env REDIS_URL='REDIS_URL_.ENV_FILE' scraper`
+`docker run --env MONGO_URL='MONGO_URL_in_.ENV_FILE' --env REDIS_URL='REDIS_URL_in_.ENV_FILE' scraper`
+
+Docker list of all containers `docker ps -a`  
+Restart a container `docker restart [container-id]`  
+Follow container logs `docker logs --follow [container-id]`
 
 Docker best practices:
 ![Docker best practices](./documentation/NodeJS-CheatSheet_page-0001.jpg)[Open it in a new tab](https://res.cloudinary.com/snyk/images/v1/wordpress-sync/NodeJS-CheatSheet/NodeJS-CheatSheet.pdf).
