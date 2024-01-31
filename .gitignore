@@ -1,8 +1,16 @@
 # dependencies
 /node_modules
+
+# dotenv's environment file 
+.env
+
+#other
 .~lock.repos.csv#
 repos.csv
 repos.json
+.git
+.gitignore
+.dockerignore
 
-# dotenv's environment file
-.env
+# typescript build files
+/build

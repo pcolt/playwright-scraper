@@ -11,26 +11,28 @@ The scraping process returns for each repository found the following data:
 - description
 - list of repository topics
 
+## Installation
+
+Run `npm install`
+
+### Configure secret/environment variables
+
+- In the root folder create `.env` file with following keys:   
+```
+MONGO_URL = 'mongodb+srv://fullstack:MONGODB_FULLSTACK_USER_PASSWORD@cluster0.ck2n2.mongodb.net/repos?retryWrites=true&w=majority'
+REDIS_URL = 'redis://default:REDIS_DEFAULTUSER_PASSWORD@redis-12236.c300.eu-central-1-1.ec2.cloud.redislabs.com:12236'
+```  
+- Set sensitive data as Fly.io secrets with commands:   
+`fly secrets set MONGO_URL='mongodb+srv://fullstack:MONGODB_FULLSTACK_USER_PASSWORD@cluster0.ck2n2.mongodb.net/repos?retryWrites=true&w=majority'`
+`fly secrets set REDIS_URL='redis://default:MONGODB_DEFAULTUSER_PASSWORD@redis-12236.c300.eu-central-1-1.ec2.cloud.redislabs.com:12236'`
+
 ## Usage
 
-`npm start` or `node index.js` to start the microservice listening to new Redis messages.
+`npm run build` to compile typescript .ts files located in */src*  
+`npm start` to run in dev mode the compiled files located in *./build* folder   
+`npm run dev` to run typescript files on the fly reloading when something changes 
 
-##### Docker 
-
-Build Docker image
-`docker build . -t scraper`
-
-Run Docker image
-`docker run --env MONGO_URL='MONGO_URL_in_.ENV_FILE' --env REDIS_URL='REDIS_URL_in_.ENV_FILE' scraper`
-
-Docker list of all containers `docker ps -a`  
-Restart a container `docker restart [container-id]`  
-Follow container logs `docker logs --follow [container-id]`
-
-Docker best practices:
-![Docker best practices](./documentation/NodeJS-CheatSheet_page-0001.jpg)[Open it in a new tab](https://res.cloudinary.com/snyk/images/v1/wordpress-sync/NodeJS-CheatSheet/NodeJS-CheatSheet.pdf).
-
-##### Fly
+### Deploy to Fly.io
 
 Check secrets:
 `fly secrets list`
@@ -53,20 +55,24 @@ Show logs from all machines (or filter by id with -i flag)
 Restart machine
 `fly machine restart`
 
-## Installation
+### Docker 
 
-Run `npm install`
+Docker image is used by Fly.io to deploy this micro-service.  
+It can be also used to run and debug the Docker image.  
 
-##### Configure secret/environment variables
+Build Docker image
+`docker build . -t scraper`
 
-- In the root folder create `.env` file with following keys:   
-```
-MONGO_URL = 'mongodb+srv://fullstack:MONGODB_FULLSTACK_USER_PASSWORD@cluster0.ck2n2.mongodb.net/repos?retryWrites=true&w=majority'
-REDIS_URL = 'redis://default:REDIS_DEFAULTUSER_PASSWORD@redis-12236.c300.eu-central-1-1.ec2.cloud.redislabs.com:12236'
-```  
-- Set sensitive data as Fly.io secrets with commands:   
-`fly secrets set MONGO_URL='mongodb+srv://fullstack:MONGODB_FULLSTACK_USER_PASSWORD@cluster0.ck2n2.mongodb.net/repos?retryWrites=true&w=majority'`
-`fly secrets set REDIS_URL='redis://default:MONGODB_DEFAULTUSER_PASSWORD@redis-12236.c300.eu-central-1-1.ec2.cloud.redislabs.com:12236'`
+Run Docker image
+`docker run --env MONGO_URL='MONGO_URL_in_.ENV_FILE' --env REDIS_URL='REDIS_URL_in_.ENV_FILE' scraper`
+
+Docker list of all containers `docker ps -a`  
+Restart a container `docker restart [container-id]`  
+Follow container logs `docker logs --follow [container-id]`
+
+Docker best practices:
+![Docker best practices](./documentation/NodeJS-CheatSheet_page-0001.jpg)[Open it in a new tab](https://res.cloudinary.com/snyk/images/v1/wordpress-sync/NodeJS-CheatSheet/NodeJS-CheatSheet.pdf).
+
 
 ## Dependencies
 

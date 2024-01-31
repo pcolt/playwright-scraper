@@ -18,10 +18,16 @@ RUN useradd -m node
 # Copy all from current directory to /scraper directory in the container
 # Change the owner and group of the copied files to 'node'
 COPY --chown=node:node . .
+# COPY ./package*.json .
 
 # Install dependencies without updating versions and package-lock.json
-# Install only production dependencies
-RUN npm ci --only=production
+RUN npm ci
+# Install TypeScript globally
+RUN npm install -g typescript
+# Compile TypeScript to JavaScript
+RUN npm run build
+# Remove devDependencies
+RUN npm prune --production
 
 # Set the user (and group)
 USER node:node
@@ -29,4 +35,4 @@ USER node:node
 # Runs "/usr/bin/dumb-init -- /my/script --with --args"
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 # The command that Docker will run by default when you start a container from this image
-CMD ["node", "index.js"] 
+CMD ["node", "build/index.js"] 

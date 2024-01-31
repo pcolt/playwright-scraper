@@ -1,11 +1,11 @@
 import { chromium } from 'playwright';
 import { Parser } from '@json2csv/plainjs';
 import { writeFileSync } from 'fs';
-import mongoose from 'mongoose';
+import mongoose, { set } from 'mongoose';
 // import 'dotenv/config';
 import repoSchema from './models/repo_model.js';
 
-const scraper = async (topic) => {
+const scraper = async (topic: string) => {
     // console.log('topic', topic);
 
     /**
@@ -37,14 +37,19 @@ const scraper = async (topic) => {
     const repos = await locatorRepos.evaluateAll((repoCards) => {
     // const repos = await page.$$eval('article.border', (repoCards) => {
         return repoCards.map((card, index) => {
-            const [user, repo] = card.querySelectorAll('h3 a');     // assign first and second result using js destructuring assigment sintax
-            const stars = card.querySelector('#repo-stars-counter-star')
-                .getAttribute('title');
-            const description = card.querySelector('div.px-3 > p');
-            const topics = card.querySelectorAll('a.topic-tag');
+            // const [user, repo]: NodeListOf<HTMLElement> = card.querySelectorAll('h3 a');     // assign first and second result using js destructuring assigment sintax
+            const [user] = card.querySelectorAll('h3');     // assign first and second result using js destructuring assigment sintax
+            const [repo] = card.querySelectorAll('a');     // assign first and second result using js destructuring assigment sintax
+            const starsElement = card.querySelector('#repo-stars-counter-star')
+            if (starsElement === null) {
+                throw new Error('starsElement is null');
+            }
+            const stars = starsElement.getAttribute('title');
+            const description: HTMLElement | null = card.querySelector('div.px-3 > p');
+            const topics: NodeListOf<HTMLElement> = card.querySelectorAll('a.topic-tag');
 
-            const toText = (element) => element && element.innerText.trim();
-            const parseNumber = (text) => Number(text.replace(/,/g, ''));
+            const toText = (element: HTMLElement) => element && element.innerText.trim();
+            const parseNumber = (text: string) => Number(text.replace(/,/g, ''));
             const repoLink = card.querySelectorAll('div.px-3 a.Link')[1].getAttribute('href');
             console.log('repoLink', repoLink);
 
@@ -53,8 +58,8 @@ const scraper = async (topic) => {
                 user: toText(user),
                 repoName: toText(repo),
                 url: repo.href,
-                stars: parseNumber(stars),
-                description: toText(description),
+                stars: stars? parseNumber(stars) : "stars not found",
+                description: description ? toText(description) : "description not found",
                 topics: Array.from(topics).map((t) => toText(t)),
                 repoLink: repoLink,
             };
@@ -78,13 +83,18 @@ const scraper = async (topic) => {
             .first()
             .textContent();
         console.log('commitText', commitText);
+        if (!commitText) {
+            throw new Error('commitText is falsy');
+        }
         const numberStrings = commitText.match(/\d+/g);
+        // @ts-ignore 
         const commitCount = Number(numberStrings.join(''));
         console.log('commitCount', commitCount);
 
         // select the right repos object and store the commits number
         repos.map(mappedRepos => {
             if (mappedRepos.url === repo.url) {
+                // @ts-ignore
                 repo.commits = commitCount;
                 console.log('repo', repo);
                 return repo;
