@@ -1,28 +1,28 @@
 import redis from 'redis' // Redis client
 import scraper from './scraper.js'  // scraper function
-import mongoose from 'mongoose';
-import 'dotenv/config';
+import mongoose from 'mongoose'
+import 'dotenv/config'
 
 const main = async () => {
-  // Connect to MongoDB
-  const url = process.env.MONGO_URL;            // use dotenv's .env environment file
+
+  // CONNECT TO MONGO DB
+  const url = process.env.MONGO_URL            // use dotenv's .env environment file
   //   `mongodb+srv://fullstack:${password}@cluster0.ck2n2.mongodb.net/repos?retryWrites=true&w=majority`
 
-  mongoose.set('strictQuery',false);
+  mongoose.set('strictQuery',false)
   if (url === undefined) {
     throw new Error('MONGO_URL is undefined')
   }
-  mongoose.connect(url);
+  await mongoose.connect(url)
 
-  // Create a client and connect to Redis
+  // CREATE A CLIENT AND CONNECT TO REDIS
   const redisClient = redis.createClient({
     url: process.env.REDIS_URL
-  })
-    .on('error', (err) => {
-      console.error("Error " + err);
+  }).on('error', (err) => {
+      console.error("Error " + err)
     })
 
-  // Create a subscriber and subscribe to the 'runScraper' channel
+  // CREATE A SUBSCRIBER AND SUBSCRIBE TO THE 'runScraper' CHANNEL
   const subscriber = redisClient.duplicate()
   await subscriber.connect()
   console.log('subscriber.isReady():', subscriber.isReady)
@@ -32,11 +32,18 @@ const main = async () => {
 
     console.log(message) // 'message'
 
-    const topic = JSON.parse(message).topic
-    
-    scraper(topic)
-    
-  });
+    const parsedMessge: unknown = JSON.parse(message)
+    if (parsedMessge && typeof parsedMessge === 'object' && 'topic' in parsedMessge && typeof parsedMessge.topic === 'string'){
+      scraper(parsedMessge.topic).catch((err) => {
+        console.error(err)
+      })
+    } else {
+      console.error('error parsing message')
+    }
+
+  })
 }
 
-main();
+main().catch((err) => {
+    console.error(err)
+  })
