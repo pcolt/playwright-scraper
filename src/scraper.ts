@@ -4,6 +4,7 @@ import { writeFileSync } from 'fs'
 import mongoose from 'mongoose'
 // import 'dotenv/config';
 import repoSchema from './models/repo_model.js'
+import { Repository } from './types'
 
 const scraper = async (topic: string) => {
     // console.log('topic', topic);
@@ -26,6 +27,8 @@ const scraper = async (topic: string) => {
 
     await page.goto(`${baseUrl}/topics/${topic}`)
     // await page.click('text=Load more');
+
+    // Wait for the page to load at least 5 repositories
     await page.waitForFunction(() => {
         const repoCards = document.querySelectorAll('article.border')
         return repoCards.length > 5
@@ -34,12 +37,17 @@ const scraper = async (topic: string) => {
     // Extract data from the page. Selecting all 'article' elements
     // will return all the repository cards we're looking for.
     const locatorRepos = page.locator('article.border')
-    const repos = await locatorRepos.evaluateAll((repoCards) => {
+    const repos: Repository[] = await locatorRepos.evaluateAll((repoCards) => {
     // const repos = await page.$$eval('article.border', (repoCards) => {
         return repoCards.map((card, index) => {
             // const [user, repo]: NodeListOf<HTMLElement> = card.querySelectorAll('h3 a');     // assign first and second result using js destructuring assigment sintax
-            const [user] = card.querySelectorAll('h3')     // assign first and second result using js destructuring assigment sintax
-            const [repo] = card.querySelectorAll('a')     // assign first and second result using js destructuring assigment sintax
+            const [user, repoName] = card.querySelectorAll('h3 a')      // assign first and second result using js destructuring assigment sintax
+            if (user instanceof HTMLElement === false) {
+                throw new Error('user is not an instance of HTMLElement')
+            }
+            if (repoName instanceof HTMLAnchorElement === false) {
+                throw new Error('repo is not an instance of HTMLElement')
+            }
             const starsElement = card.querySelector('#repo-stars-counter-star')
             if (starsElement === null) {
                 throw new Error('starsElement is null')
@@ -56,17 +64,17 @@ const scraper = async (topic: string) => {
             return {
                 id: index,
                 user: toText(user),
-                repoName: toText(repo),
-                url: repo.href,
+                repoName: toText(repoName),
+                url: repoName.href ? repoName.href : "url not found",
                 stars: stars? parseNumber(stars) : "stars not found",
                 description: description ? toText(description) : "description not found",
                 topics: Array.from(topics).map((t) => toText(t)),
-                repoLink: repoLink,
+                repoLink: repoLink? repoLink : "repoLink not found",
             }
         })
     })
 
-    // Now extract data (commits number) from each repo page
+    // Now extract data (commits number) from each repo page and store it in the repos array of objects
     for (const repo of repos) {
         // Go to the page and wait 2 minute to load
         await page.goto(`${baseUrl}${repo.repoLink}`, { timeout: 2*60*10000 })
@@ -87,19 +95,19 @@ const scraper = async (topic: string) => {
             throw new Error('commitText is falsy')
         }
         const numberStrings = commitText.match(/\d+/g)
-        // @ts-expect-error this will never be executed if numberStrings is falsy
+        if (!numberStrings) {
+            throw new Error('numberStrings is falsy')
+        }
         const commitCount = Number(numberStrings.join(''))
         console.log('commitCount', commitCount)
 
         // select the right repos object and store the commits number
         repos.map(mappedRepos => {
             if (mappedRepos.url === repo.url) {
-                // @ts-expect-error this will never be executed if numberStrings is falsy
                 repo.commits = commitCount
                 console.log('repo', repo)
-                return repo
+                return
             }
-            return mappedRepos  // return the original object if the url doesn't match
         })
     }
 
