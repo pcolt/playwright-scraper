@@ -16,14 +16,18 @@ const main = async () => {
   await mongoose.connect(url)
 
   // CREATE A CLIENT AND CONNECT TO REDIS
+  const redisUrl = process.env.REDIS_URL
+  // console.log('redisUrl:', redisUrl)
   const redisClient = redis.createClient({
-    url: process.env.REDIS_URL
+    url: redisUrl
   }).on('error', (err) => {
-      console.error("Error " + err)
+      console.error("Redis client error " + err)
     })
 
   // CREATE A SUBSCRIBER AND SUBSCRIBE TO THE 'runScraper' CHANNEL
-  const subscriber = redisClient.duplicate()
+  const subscriber = redisClient.duplicate().on('error', (err) => {
+    console.error("Redis subscriber error " + err)
+  })
   await subscriber.connect()
   console.log('subscriber.isReady():', subscriber.isReady)
   console.log('subscriber.isOpen():', subscriber.isOpen)
@@ -45,5 +49,5 @@ const main = async () => {
 }
 
 main().catch((err) => {
-    console.error(err)
+    console.error('Main() error: ', err)
   })

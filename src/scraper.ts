@@ -74,7 +74,7 @@ const scraper = async (topic: string) => {
         })
     })
 
-    // Now extract data (commits number) from each repo page and store it in the repos array of objects
+    // Now extract data (commits number) from each repo page and store it back in the repos array of objects
     for (const repo of repos) {
         // Go to the page and wait 2 minute to load
         await page.goto(`${baseUrl}${repo.repoLink}`, { timeout: 2*60*10000 })
