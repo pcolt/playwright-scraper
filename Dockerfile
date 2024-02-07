@@ -20,10 +20,9 @@ RUN useradd -m node
 COPY --chown=node:node . .
 # COPY ./package*.json .
 
-# Install dependencies without updating versions and package-lock.json
-RUN npm ci
-# Install TypeScript globally
-RUN npm install -g typescript
+# Install dependencies including Typescript without updating versions and package-lock.json
+RUN npm ci --include=dev
+
 # Compile TypeScript to JavaScript
 RUN npm run build
 # Remove devDependencies
