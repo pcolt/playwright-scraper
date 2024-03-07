@@ -10,9 +10,9 @@
 
 ## GitHub's topics scraper with Playwright
 
-A microservice crawling and scraping GitHub repositories based on a specific topic (i.e. climatechange).  
+A microservice crawling and scraping GitHub repositories based on a specific topic (i.e. climatechange). This project is part of [my final project](https://github.com/pcolt/react-scraper) for the Helsinki University's [Full Stack Open course](https://fullstackopen.com/en/).  
 
-The service is subcribed to a Redis pub/sub message channel and starts a new scraping process whenever a message -with the topic to be scraped- is received.  
+The service is subcribed to a Redis pub/sub message channel and starts a new scraping process whenever a message is received.
 
 The microservice stores the results into an Atlas Mongodb database. The complete result is also stored into a local .json and .csv file.  
 
