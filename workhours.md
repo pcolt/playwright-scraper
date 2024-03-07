@@ -27,4 +27,4 @@
 
 # additional work hours for main single-page app react-scraper
 
-Check proper file [workhours.md](https://github.com/pcolt/react-scraper/blob/master/workinghours.md) in react-scraper repository
+Check proper file [workhours.md](https://github.com/pcolt/react-scraper/blob/master/workhours.md) in react-scraper repository

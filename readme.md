@@ -24,6 +24,9 @@ The scraping process returns for each repository found the following data:
 - description
 - list of repository topics
 
+### Work hours
+A list of approximate work hours hused are listed in [workhours.md](/workhours.md)
+
 ## Installation
 
 Run `npm install`
