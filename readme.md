@@ -1,8 +1,21 @@
-## GitHub's topics scraper with playright
 
-This node microservice is scraping GitHub repositories based on a specific topic (i.e. 'scraping' or 'climatechange').
-The service is subcribed to a Redis message channel and starts a new scraping process whenever a message -with the topic to be scraped- is received.   
-The microservice stores the results into an Atlas Mongodb database. The complete result is also stored into a local .json and .csv file. 
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-45ba4b?style=for-the-badge&logo=Playwright&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+
+
+## GitHub's topics scraper
+
+A microservice crawling and scraping GitHub repositories based on a specific topic (i.e. climatechange).  
+
+The service is subcribed to a Redis pub/sub message channel and starts a new scraping process whenever a message -with the topic to be scraped- is received.  
+
+The microservice stores the results into an Atlas Mongodb database. The complete result is also stored into a local .json and .csv file.  
+
 The scraping process returns for each repository found the following data: 
 - owner
 - name
