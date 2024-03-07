@@ -86,6 +86,13 @@ Follow container logs `docker logs --follow [container-id]`
 Docker best practices:
 ![Docker best practices](./documentation/NodeJS-CheatSheet_page-0001.jpg)[Open it in a new tab](https://res.cloudinary.com/snyk/images/v1/wordpress-sync/NodeJS-CheatSheet/NodeJS-CheatSheet.pdf).
 
+### Git
+
+Print list of all commits to a .txt file ([Docs](https://git-scm.com/docs/git-log#Documentation/git-log.txt-emHem))  
+```bash
+git log --reverse --pretty=format:'| %as | 1 | %s |' > log.txt
+```
+
 
 ## Dependencies
 
