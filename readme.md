@@ -25,7 +25,7 @@ The scraping process returns for each repository found the following data:
 - list of repository topics
 
 ### Work hours
-A list of approximate work hours hused are listed in [workhours.md](/workhours.md)
+A list of approximate work hours used to develop the project are listed in [workhours.md](/workhours.md)
 
 ## Installation
 
