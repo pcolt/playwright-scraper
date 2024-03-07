@@ -8,7 +8,7 @@
 ![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 
 
-## GitHub's topics scraper
+## GitHub's topics scraper with Playwright
 
 A microservice crawling and scraping GitHub repositories based on a specific topic (i.e. climatechange).  
 
